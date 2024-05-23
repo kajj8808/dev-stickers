@@ -1,6 +1,7 @@
 import React from "react";
-import Layout from "../../components/layout";
 import { graphql } from "gatsby";
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
+import Layout from "../../components/layout";
 import Seo from "../../components/seo";
 
 interface BlogPostProps {
@@ -9,8 +10,13 @@ interface BlogPostProps {
 }
 
 export default function BlogPost({ data, children }: BlogPostProps) {
+  const image = getImage(
+    data.mdx?.frontmatter?.headerImage?.childImageSharp?.gatsbyImageData!
+  );
+
   return (
     <Layout title="">
+      <GatsbyImage image={image as any} alt={data.mdx?.frontmatter?.title!} />
       <div>{children}</div>
     </Layout>
   );
@@ -25,6 +31,11 @@ export const query = graphql`
         date(formatString: "YYYY.MM.DD")
         author
         slug
+        headerImage {
+          childImageSharp {
+            gatsbyImageData(height: 450)
+          }
+        }
       }
       body
     }
